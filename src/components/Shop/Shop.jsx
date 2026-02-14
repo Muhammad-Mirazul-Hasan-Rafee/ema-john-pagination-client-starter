@@ -8,9 +8,11 @@ import { Link, useLoaderData } from 'react-router-dom';
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
+    const [itemsPerPage , setItemsPerPage] = useState(10);
+    const [currentPage , setCurrentPage] = useState(0);
 
     const {count} = useLoaderData();
-    const itemsPerPage = 10;
+  
     const numberOfPages = Math.ceil(count/itemsPerPage);
     // const pages = [];
     // for(let i = 0 ; i<numberOfPages ; i++){
@@ -72,6 +74,24 @@ const Shop = () => {
         deleteShoppingCart();
     }
 
+    const handleItemsPerPage = (e)=>{
+        const value = parseInt(e.target.value);
+        console.log(value)
+        setItemsPerPage(value);
+        setCurrentPage(0);
+    };
+const handlePreviousPage = ()=>{
+    if(currentPage > 0){
+        setCurrentPage(currentPage - 1);
+    }
+};
+const handleNextPage = ()=>{
+    if(currentPage < pages.length-1){
+        setCurrentPage(currentPage + 1);
+    }
+};
+
+
     return (
         <div className='shop-container'>
             <div className="products-container">
@@ -94,9 +114,20 @@ const Shop = () => {
                 </Cart>
             </div>
             <div className='pagination'>
+                <p>Cuurent page: {currentPage}</p>
+                <button onClick={handlePreviousPage}>Previous</button>
                  {
-                    pages.map((page)=> <button key={page}>{page}</button>)
+                    pages.map((page)=> <button className={currentPage === page && 'selected'}
+                    onClick={()=>setCurrentPage(page)}
+                    key={page}>{page}</button>)
                  }
+                 <button onClick={handleNextPage}>Next</button>
+                 <select value={itemsPerPage} onChange={handleItemsPerPage} name='' id=''>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                 </select>
             </div>
         </div>
     );
